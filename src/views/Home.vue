@@ -1,11 +1,11 @@
 <template>
   <section class="home-wrapper">
     <div class="content-header-wrapper mx-2 py-3">
-      <span>Total task: {{ countTask }}</span>
       <div class="d-flex align-center">
         <span class="text-subtitle-1 mr-3">Filters</span>
         <v-select
-          :items="categories"
+          :items="categoriesItems"
+          v-model="categories"
           label="All"
           hide-details
           single-line
@@ -16,7 +16,7 @@
     </div>
     <div class="card-list-wrapper d-flex flex-wrap">
       <card-todo 
-        v-for="(task, index) in Task"
+        v-for="(task, index) in filteredTask"
         :key="index"
         :index="index"
         :task="task"></card-todo>
@@ -36,16 +36,28 @@ export default {
   },
   data() {
     return {
-      categories: ['All', 'Design', 'Programming', 'Study'],
+      categoriesItems: ['All', 'Design', 'Programming', 'Study'],
+      categories: 'All'
     }
-  },  
+  },
   computed: {
     // grab list of task  from state
     ...mapState([
       'Task'
     ]),
-    countTask: function() {
-      return this.Task.length;
+    filteredTask: function() {
+      return this.filters(this.categories)
+    }
+  },
+  methods: {
+    filters: function(categories) {
+      return this.Task.filter(function(task) {
+        if (categories == 'All') {
+          return task
+        }else{
+          return task.categories == categories
+        }
+      })
     }
   }
 }

@@ -2,8 +2,9 @@ export default [
   {
     title: 'Intro to web design',
     desc: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam magnam dolores expedita ullam eaque inventore harum perspiciatis, maiores quo optio voluptate magni deserunt possimus sit dolor? Inventore magnam sunt quos!',
-    categories: 'design',
+    categories: 'Design',
     progress: 0,
+    favorite: true,
     participants: [
       { name: 'Chealsea', image: '@/assets/images/person.jpg'}
     ],
@@ -18,8 +19,9 @@ export default [
   {
     title: 'Intro to HTML & CSS',
     desc: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam magnam dolores expedita ullam eaque inventore harum perspiciatis, maiores quo optio voluptate magni deserunt possimus sit dolor? Inventore magnam sunt quos!',
-    categories: 'programming',
+    categories: 'Programming',
     progress: 0,
+    favorite: false,
     participants: [
       { name: 'Chealsea', image: '@/assets/images/person.jpg'}
     ],
@@ -37,8 +39,9 @@ export default [
   {
     title: 'Intro to Calculus',
     desc: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam magnam dolores expedita ullam eaque inventore harum perspiciatis, maiores quo optio voluptate magni deserunt possimus sit dolor? Inventore magnam sunt quos!',
-    categories: 'study',
+    categories: 'Study',
     progress: 0,
+    favorite: true,
     participants: [
       { name: 'Chealsea', image: '@/assets/images/person.jpg'}
     ],
@@ -54,8 +57,9 @@ export default [
   {
     title: 'Intro to UX/UI',
     desc: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam magnam dolores expedita ullam eaque inventore harum perspiciatis, maiores quo optio voluptate magni deserunt possimus sit dolor? Inventore magnam sunt quos!',
-    categories: 'design',
+    categories: 'Design',
     progress: 0,
+    favorite: false,
     participants: [
       { name: 'Chealsea', image: '@/assets/images/person.jpg'}
     ],
@@ -69,8 +73,9 @@ export default [
   {
     title: 'Array',
     desc: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam magnam dolores expedita ullam eaque inventore harum perspiciatis, maiores quo optio voluptate magni deserunt possimus sit dolor? Inventore magnam sunt quos!',
-    categories: 'proramming',
+    categories: 'Programming',
     progress: 0,
+    favorite: false,
     participants: [
       { name: 'Chealsea', image: '@/assets/images/person.jpg'}
     ],

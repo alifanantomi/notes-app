@@ -15,9 +15,17 @@
         <v-navigation-drawer clipped fixed v-model="drawer" mobile-breakpoint="769" class="navigation-wrapper">
           <v-list>
             <v-subheader class="text-capitalize font-weight-bold">Favorites</v-subheader>
-            <the-navigation></the-navigation>
+            <the-navigation
+              v-for="(task, index) in getFavorite" 
+              :key="index"
+              :task="task"
+              link></the-navigation>
             <v-subheader class="text-capitalize font-weight-bold">All Task</v-subheader>
-            <the-navigation></the-navigation>
+            <the-navigation 
+              v-for="task in Task" 
+              :key="task.title"
+              :task="task"
+              link></the-navigation>
           </v-list>
           <v-list-item link to="/new">
             <v-list-item-title>Add a task</v-list-item-title>
@@ -42,6 +50,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 import TheNavigation from '@/layouts/TheNavigation';
 import SearchBar from '@/components/SearchBar.vue'
 
@@ -56,8 +66,19 @@ export default {
       drawer: null,
     }
   },
+  computed: {
+    ...mapState([
+      'Task'
+    ]),
+    getFavorite: function() {
+      return this.Task.filter(function (task) {
+        return task.favorite
+      });
+    }
+  },
   created () {
     this.$vuetify.theme.dark = true
+    this.getFavorite
   },
 };
 </script>

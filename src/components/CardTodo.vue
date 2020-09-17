@@ -66,12 +66,6 @@ export default {
       required: false
     }
   },
-  data: function() {
-    return{
-      visibility: 'all',
-      lines: 2
-    }
-  },
   computed: {
     slicedTodos: function() {
       return this.task.todos.slice(0, 3)
