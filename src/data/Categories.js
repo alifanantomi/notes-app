@@ -1,0 +1,1 @@
+export default [ 'all', 'design', 'programming', 'study' ]

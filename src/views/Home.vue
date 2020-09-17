@@ -1,11 +1,12 @@
 <template>
   <section class="home-wrapper">
-    <div class="content-header-wrapper pt-4">
-      <SearchBar></SearchBar>
-      <div class="d-flex justify-space-between align-center py-4">
+    <div class="content-header-wrapper mx-2 py-3">
+      <span>Total task: {{ countTask }}</span>
+      <div class="d-flex align-center">
+        <span class="text-subtitle-1 mr-3">Filters</span>
         <v-select
-          :items="items"
-          label="Categories"
+          :items="categories"
+          label="All"
           hide-details
           single-line
           solo
@@ -14,38 +15,37 @@
       </div>
     </div>
     <div class="card-list-wrapper d-flex flex-wrap">
-      <CardTodo></CardTodo>
-      <CardTodo></CardTodo>
-      <CardTodo></CardTodo>
-      <CardTodo></CardTodo>
-      <CardTodo></CardTodo>
-      <CardTodo></CardTodo>
-      <CardTodo></CardTodo>
-      <CardTodo></CardTodo>
+      <card-todo 
+        v-for="(task, index) in Task"
+        :key="index"
+        :index="index"
+        :task="task"></card-todo>
     </div>
   </section>
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 import CardTodo from '@/components/CardTodo.vue'
-import SearchBar from '@/components/SearchBar.vue'
 
 export default {
   name: 'Home',
   components: {
     CardTodo,
-    SearchBar
   },
   data() {
     return {
-      items: ['Design', 'Programming', 'Study'],
-      category: ''
+      categories: ['All', 'Design', 'Programming', 'Study'],
     }
-  },
-  methods: {
-    getCategory(value) {
-      this.category = value
-      return console.log(this.category);
+  },  
+  computed: {
+    // grab list of task  from state
+    ...mapState([
+      'Task'
+    ]),
+    countTask: function() {
+      return this.Task.length;
     }
   }
 }
