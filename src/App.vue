@@ -1,50 +1,61 @@
 <template>
   <v-app>
     <v-sheet height="100%" class="overflow-hidden" style="position: relative;">
+      <!-- TopBar -->
       <v-app-bar flat outlined fixed>
         <v-app-bar-nav-icon class="d-md-none d-lg-none" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
         <v-toolbar-title class="text-h6 d-none d-md-inline d-lg-inline pl-0">Task app</v-toolbar-title>
         <v-spacer></v-spacer>
-        <search-bar></search-bar>
+        <v-text-field
+          class=""
+          placeholder="Search task"
+          color="dark"
+          v-model="query"
+          hide-details
+          outlined
+          dense
+        ></v-text-field>
         <v-spacer></v-spacer>
         <v-btn class="profile-bar" icon>
           <v-img src="@/assets/images/person.jpg" alt="username" class="username-img rounded-circle" max-height="30" max-width="30" ></v-img>
         </v-btn>
       </v-app-bar>
-      <!-- <v-row no-gutters> -->
-        <v-navigation-drawer clipped fixed v-model="drawer" mobile-breakpoint="769" class="navigation-wrapper">
-          <v-list>
-            <v-subheader class="text-capitalize font-weight-bold">Favorites</v-subheader>
-            <the-navigation
-              v-for="(task, index) in getFavorite" 
-              :key="index"
-              :task="task"
-              link></the-navigation>
-            <v-subheader class="text-capitalize font-weight-bold">All Task</v-subheader>
-            <the-navigation 
-              v-for="task in Task" 
-              :key="task.title"
-              :task="task"
-              link></the-navigation>
-          </v-list>
-          <v-list-item link to="/new">
-            <v-list-item-title>Add a task</v-list-item-title>
-            <v-icon>mdi-plus</v-icon>
-          </v-list-item>
-          <v-list-item link to="/profile">
-            <v-list-item-title>Your profile</v-list-item-title>
-            <!-- <v-icon>mdi-plus</v-icon> -->
-          </v-list-item>
-          <template v-slot:append>
-            <v-list-item link>
-              <v-list-item-title>Logout</v-list-item-title>
-          </v-list-item>
-          </template>
-        </v-navigation-drawer>
-        <div class="list-wrapper">
-          <router-view></router-view>
-        </div>
-      <!-- </v-row> -->
+
+      <!-- SideBar -->
+      <v-navigation-drawer clipped fixed v-model="drawer" mobile-breakpoint="769" class="navigation-wrapper">
+        <v-list>
+          <v-subheader class="text-capitalize font-weight-bold">Favorites</v-subheader>
+          <!-- list of favorite -->
+          <the-navigation
+            v-for="(task, index) in getFavorite" 
+            :key="index"
+            :task="task"
+            link></the-navigation>
+          <v-subheader class="text-capitalize font-weight-bold">All Task</v-subheader>
+          <!-- list of all task -->
+          <the-navigation 
+            v-for="task in Task" 
+            :key="task.title"
+            :task="task"
+            link></the-navigation>
+        </v-list>
+        <v-list-item link to="/new">
+          <v-list-item-title>Add a task</v-list-item-title>
+          <v-icon>mdi-plus</v-icon>
+        </v-list-item>
+        <v-list-item link to="/profile">
+          <v-list-item-title>Your profile</v-list-item-title>
+        </v-list-item>
+        <template v-slot:append>
+          <v-list-item link>
+            <v-list-item-title>Logout</v-list-item-title>
+        </v-list-item>
+        </template>
+      </v-navigation-drawer>
+      <!-- content view -->
+      <div class="list-wrapper">
+        <router-view></router-view>
+      </div>
     </v-sheet>
   </v-app>
 </template>
@@ -53,39 +64,50 @@
 import { mapState } from 'vuex';
 
 import TheNavigation from '@/layouts/TheNavigation';
-import SearchBar from '@/components/SearchBar.vue'
+// import SearchBar from '@/components/SearchBar.vue'
 
 export default {
   name: 'App',
   components: {
     TheNavigation,    
-    SearchBar,
+    // SearchBar,
   },
-  data () {
+  data() {
     return {
       drawer: null,
-    }
-  },
-  computed: {
-    ...mapState([
-      'Task'
-    ]),
-    getFavorite: function() {
-      return this.Task.filter(function (task) {
-        return task.favorite
-      });
+      query: ''
     }
   },
   created () {
     this.$vuetify.theme.dark = true
     this.getFavorite
   },
+  computed: {
+    ...mapState([
+      'Task'
+    ]),
+    // get favorite list for navigation
+    getFavorite: function() {
+      return this.Task.filter(function (task) {
+        return task.favorite
+      });
+    }
+  },
+  watch: {
+    query: function() {
+      if (this.query == '') {
+        this.$router.push({name: 'Home'})
+      }else{
+        this.$router.push({name: 'Home', query: { search: this.query}})
+      }
+    }
+  },
 };
 </script>
 
 <style lang="sass" scoped>
   .v-app-bar
-    background-color: #FFFFFF  
+    background-color: #FFFFFF
 
   .navigation-wrapper
     padding-top: 64px

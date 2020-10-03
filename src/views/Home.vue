@@ -1,25 +1,30 @@
 <template>
   <section class="home-wrapper">
-    <div class="content-header-wrapper mx-2 py-3">
-      <div class="d-flex align-center">
-        <span class="text-subtitle-1 mr-3">Filters</span>
+    <div class="content-header-wrapper d-flex justify-space-between align-center mx-md-2 py-3">
+      <span class="text-subtitle-1 d-none d-md-inline d-lg-inline">{{ categories }} Task</span>
+      <!-- filter input select -->
+      <div class="d-flex justify-content-between align-center">
+        <!-- <span class="text-subtitle-1 mr-3">Filters</span> -->
         <v-select
           :items="categoriesItems"
           v-model="categories"
-          label="All"
+          full-width
           hide-details
           single-line
-          solo
+          dense
+          outlined
           flat
         ></v-select>
       </div>
     </div>
+    <!-- card component -->
     <div class="card-list-wrapper d-flex flex-wrap">
-      <card-todo 
+      <card-task 
+        class="list-complete-item"
         v-for="(task, index) in filteredTask"
         :key="index"
         :index="index"
-        :task="task"></card-todo>
+        :task="task"></card-task>
     </div>
   </section>
 </template>
@@ -27,12 +32,13 @@
 <script>
 import { mapState } from "vuex";
 
-import CardTodo from '@/components/CardTodo.vue'
+import CardTask from '@/components/CardTask.vue'
+// import { filter } from 'vue/types/umd';
 
 export default {
   name: 'Home',
   components: {
-    CardTodo,
+    CardTask,
   },
   data() {
     return {
@@ -45,18 +51,43 @@ export default {
     ...mapState([
       'Task'
     ]),
-    filteredTask: function() {
-      return this.filters(this.categories)
+    // return task categories based
+    filteredTask() {
+      var queryCheck = this.$route.query.search
+      let task = this.Task
+      let categories = this.categories
+      if (queryCheck) {
+        task = task.filter((t) => {
+          return t.title.toLowerCase().indexOf(queryCheck.toLowerCase()) !== -1
+        })
+      }
+      if (this.categories && this.categories !== 'All') {
+        task = task.filter((t) => {
+          return t.categories === categories
+        })
+      }
+      return task
     }
   },
   methods: {
     filters: function(categories) {
+      var queryCheck = this.$route.query.search
       return this.Task.filter(function(task) {
-        if (categories == 'All') {
+        if(categories == 'All' && !queryCheck) {
           return task
-        }else{
+        }else if(categories == 'All' && queryCheck){
+          return console.log('All with '+queryCheck);
+        }else if(categories && !queryCheck){
+          console.log(categories+' no query');
           return task.categories == categories
+        }else{
+          console.log(categories+' '+queryCheck);
         }
+      })
+    },
+    search: function(listItem, query){
+      return listItem.filter(function (item) {
+        return item.title.toLowerCase().indexOf(query.toLowerCase()) !== -1
       })
     }
   }

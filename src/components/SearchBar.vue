@@ -1,9 +1,21 @@
 <template>
-  <v-text-field
+  <v-autocomplete
+    class="mr-md-4"
+    v-model="select"
     placeholder="Search task"
-    hide-details="auto"
     color="dark"
+    hide-details
+    hide-no-data
+    append-icon
     outlined
     dense
-  ></v-text-field>
+  ></v-autocomplete>
 </template>
+
+<script>
+export default {
+  props: {
+
+  }
+}
+</script>
