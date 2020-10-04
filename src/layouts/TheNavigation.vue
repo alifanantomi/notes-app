@@ -1,6 +1,6 @@
 <template>
   <v-list nav subheader>
-    <v-list-item link>
+    <v-list-item link :to="`/task/${index}`">
       <v-list-item-content>
         <v-list-item-title v-text="task.title"></v-list-item-title>
       </v-list-item-content>
@@ -13,12 +13,15 @@ export default {
   props: {
     task: {
       type: Object
+    },
+    index: {
+      type: Number
     }
   },
   filters: {
-    stripRemover(value) {
+    slashRemover(value) {
       var string = value
-      return string.replace(/-/ig, ' ')
+      return string.split('/').join('-')
     }
   }
 }

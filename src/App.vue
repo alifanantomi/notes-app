@@ -30,26 +30,22 @@
             v-for="(task, index) in getFavorite" 
             :key="index"
             :task="task"
+            :index="index"
             link></the-navigation>
           <v-subheader class="text-capitalize font-weight-bold">All Task</v-subheader>
           <!-- list of all task -->
           <the-navigation 
-            v-for="task in Task" 
-            :key="task.title"
+            v-for="(task, index) in Task" 
+            :key="index"
             :task="task"
+            :index="index"
             link></the-navigation>
         </v-list>
-        <v-list-item link to="/new">
-          <v-list-item-title>Add a task</v-list-item-title>
-          <v-icon>mdi-plus</v-icon>
-        </v-list-item>
-        <v-list-item link to="/profile">
-          <v-list-item-title>Your profile</v-list-item-title>
-        </v-list-item>
         <template v-slot:append>
-          <v-list-item link>
-            <v-list-item-title>Logout</v-list-item-title>
-        </v-list-item>
+          <v-list-item link to="/new">
+            <v-list-item-title>Add a task</v-list-item-title>
+            <v-icon>mdi-plus</v-icon>
+          </v-list-item>
         </template>
       </v-navigation-drawer>
       <!-- content view -->
@@ -75,7 +71,8 @@ export default {
   data() {
     return {
       drawer: null,
-      query: ''
+      query: '',
+      currentLocation: window.location.pathname
     }
   },
   created () {
@@ -129,5 +126,5 @@ export default {
       padding: 0
 
     .list-wrapper
-      padding: 64px 20px 0 20px
+      padding: 64px 15px 0 15px
 </style>

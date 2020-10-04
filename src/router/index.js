@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 import Home from '../views/Home.vue'
+import DetailTask from '../views/DetailTask'
 import NewTask from '../views/NewTask'
 import Profile from '../views/Profile'
 
@@ -12,6 +13,11 @@ const routes = [
     path: '/',
     name: 'Home',
     component: Home
+  },
+  {
+    path: '/task/:task',
+    name: 'DetailTask',
+    component: DetailTask
   },
   {
     path: '/new',
