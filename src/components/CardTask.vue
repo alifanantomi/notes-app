@@ -1,5 +1,5 @@
 <template>
-  <v-card class="rounded-lg mb-3 mx-lg-2 mx-md-auto mx-sm-auto mx-auto" max-width="335" outlined>
+  <v-card class="rounded-lg mb-3 mx-lg-2 mx-md-auto mx-sm-auto mx-auto" max-width="343" outlined>
     <!-- Task.Categories -->
     <div class="categories-wrapper d-flex justify-space-between align-center">
       <v-card-text class="text-caption text-capitalize">
@@ -35,9 +35,9 @@
         <v-progress-linear :value="task.progress + 10" color="grey" height="4" rounded></v-progress-linear>
       </div>
     </v-card-text>
-    <v-divider class="my-2"></v-divider>
+    <v-divider class="my-1"></v-divider>
     <!-- Task.Perticipant -->
-    <div class="d-flex justify-space-between align-center mx-4 my-2">
+    <div class="d-flex justify-space-between align-center mx-4 my-1">
       <!-- <v-row no-gutters>
         <v-btn 
           class="profile-bar mr-3" 

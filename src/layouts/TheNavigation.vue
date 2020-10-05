@@ -1,8 +1,8 @@
 <template>
-  <v-list nav subheader>
+  <v-list nav subheader dense>
     <v-list-item link :to="`/task/${index}`">
       <v-list-item-content>
-        <v-list-item-title v-text="task.title"></v-list-item-title>
+        <v-list-item-title class="text-body-2" v-text="task.title"></v-list-item-title>
       </v-list-item-content>
     </v-list-item>
   </v-list>

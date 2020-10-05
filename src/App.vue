@@ -2,7 +2,7 @@
   <v-app>
     <v-sheet height="100%" class="overflow-hidden" style="position: relative;">
       <!-- TopBar -->
-      <v-app-bar flat outlined fixed>
+      <v-app-bar flat outlined fixed height="58">
         <v-app-bar-nav-icon class="d-md-none d-lg-none" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
         <v-toolbar-title class="text-h6 d-none d-md-inline d-lg-inline pl-0">Task app</v-toolbar-title>
         <v-spacer></v-spacer>
@@ -22,9 +22,9 @@
       </v-app-bar>
 
       <!-- SideBar -->
-      <v-navigation-drawer clipped fixed v-model="drawer" mobile-breakpoint="769" class="navigation-wrapper">
+      <v-navigation-drawer clipped fixed v-model="drawer" width="230" mobile-breakpoint="769" class="navigation-wrapper">
         <v-list>
-          <v-subheader class="text-capitalize font-weight-bold">Favorites</v-subheader>
+          <v-subheader class="text-capitalize text-body-2 font-weight-bold">Favorites</v-subheader>
           <!-- list of favorite -->
           <the-navigation
             v-for="(task, index) in getFavorite" 
@@ -32,19 +32,19 @@
             :task="task"
             :index="index"
             link></the-navigation>
-          <v-subheader class="text-capitalize font-weight-bold">All Task</v-subheader>
+          <v-subheader class="text-capitalize text-body-2 font-weight-bold">All Task</v-subheader>
           <!-- list of all task -->
           <the-navigation 
             v-for="(task, index) in Task" 
-            :key="index"
-            :task="task"
+            :key="task.title"
             :index="index"
+            :task="task"
             link></the-navigation>
         </v-list>
         <template v-slot:append>
           <v-list-item link to="/new">
-            <v-list-item-title>Add a task</v-list-item-title>
-            <v-icon>mdi-plus</v-icon>
+            <v-list-item-title class="text-body-2">Add a task</v-list-item-title>
+            <v-icon small>mdi-plus</v-icon>
           </v-list-item>
         </template>
       </v-navigation-drawer>
@@ -107,11 +107,11 @@ export default {
     background-color: #FFFFFF
 
   .navigation-wrapper
-    padding-top: 64px
+    padding-top: 58px
     margin: auto
 
   .list-wrapper
-    padding: 64px 0 0 256px
+    padding: 72px 0 0 230px
 
   @media (min-width: 453px) and (max-width: 768px)
     .navigation-wrapper
@@ -126,5 +126,5 @@ export default {
       padding: 0
 
     .list-wrapper
-      padding: 64px 15px 0 15px
+      padding: 58px 15px 0 15px
 </style>
