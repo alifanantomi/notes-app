@@ -1,7 +1,19 @@
 <template>
-  <div class="editor py-5">
-    <editor-menu-bar :editor="editor" v-slot="{ commands, isActive }">
-      <div class="menubar">
+  <div class="editor px-3">
+    <div class="editor__page-control d-flex justify-start align-center">
+      <v-btn small text class="text-none text-body-2 px-2" color="rgba(255, 255, 255, 0.4)">
+        <v-icon left class="mr-1">mdi-image</v-icon>
+        Add cover
+      </v-btn>
+    </div>
+
+    <editor-floating-menu :editor="editor" v-slot="{ commands, isActive, menu }">
+      <div 
+        class="editor__floating-menu"
+        :class="{ 'is-active': menu.isActive }"
+        :style="`top: ${menu.top}px`"
+      >
+
         <button 
           class="menubar__button" 
           :class="{ 'is-active': isActive.heading({ level: 1 }) }"
@@ -38,20 +50,20 @@
           <v-icon>mdi-code-tags</v-icon>  
         </button>
 
-        <button
+        <!-- <button
           class="menubar__button"
           :class="{ 'is-active': isActive.todo_list() }"
           @click="commands.todo_list">
           <v-icon>mdi-format-list-checks</v-icon>  
-        </button>
+        </button> -->
       </div>
-    </editor-menu-bar>
+    </editor-floating-menu>
     <editor-content class="editor__content" :editor="editor" />
   </div>
 </template>
 
 <script>
-import { Editor, EditorContent, EditorMenuBar } from 'tiptap'
+import { Editor, EditorContent, EditorFloatingMenu  } from 'tiptap'
 import { 
   Blockquote,
   CodeBlock,
@@ -77,7 +89,7 @@ import Title from './custom-extensions/Title'
 
 export default {
   components: {
-    EditorMenuBar,
+    EditorFloatingMenu ,
     EditorContent
   },
   data: function() {
@@ -116,7 +128,6 @@ export default {
             notAfter: ['paragraph'],
           }),
         ],
-        
       })
     }
   },

@@ -3,7 +3,7 @@
     <div class="content-header-wrapper d-md-flex d-sm-flex justify-space-between align-center mx-md-2 py-3">
       <span class="text-subtitle-1 d-none d-sm-inline d-md-inline d-lg-inline">{{ categories }} Task</span>
       <!-- filter input select -->
-      <div class="d-md-flex justify-content-between align-center">
+      <div class="">
         <v-select
           :items="categoriesItems"
           v-model="categories"
@@ -14,7 +14,6 @@
           outlined
           flat
         ></v-select>
-        <!-- <span class="text-subtitle-1 mr-3">Filters</span> -->
       </div>
     </div>
     <!-- card component -->

@@ -2,12 +2,11 @@
   <v-app>
     <v-sheet height="100%" class="overflow-hidden" style="position: relative;">
       <!-- TopBar -->
-      <v-app-bar flat outlined fixed height="58">
+      <v-app-bar v-if="currentLocation != '/new'" flat fixed height="58">
         <v-app-bar-nav-icon class="d-md-none d-lg-none" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
         <v-toolbar-title class="text-h6 d-none d-md-inline d-lg-inline pl-0">Task app</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-text-field
-          class=""
           placeholder="Search task"
           color="dark"
           v-model="query"
@@ -15,6 +14,14 @@
           outlined
           dense
         ></v-text-field>
+        <v-spacer></v-spacer>
+        <v-btn class="profile-bar" icon>
+          <v-img src="@/assets/images/person.jpg" alt="username" class="username-img rounded-circle" max-height="30" max-width="30" ></v-img>
+        </v-btn>
+      </v-app-bar>
+      <v-app-bar v-else flat fixed height="52">
+        <v-btn icon link href="/"><v-icon>mdi-chevron-left</v-icon></v-btn>
+        <span class="text-body-1">New Task</span>
         <v-spacer></v-spacer>
         <v-btn class="profile-bar" icon>
           <v-img src="@/assets/images/person.jpg" alt="username" class="username-img rounded-circle" max-height="30" max-width="30" ></v-img>
@@ -42,8 +49,8 @@
             link></the-navigation>
         </v-list>
         <template v-slot:append>
-          <v-list-item link to="/new">
-            <v-list-item-title class="text-body-2">Add a task</v-list-item-title>
+          <v-list-item link href="/new">
+            <v-list-item-title>Add a task</v-list-item-title>
             <v-icon small>mdi-plus</v-icon>
           </v-list-item>
         </template>
