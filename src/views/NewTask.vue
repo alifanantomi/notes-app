@@ -1,5 +1,6 @@
 <template>
   <div class="editor px-3">
+
     <div class="editor__page-control d-flex justify-start align-center">
       <v-btn small text class="text-none text-body-2 px-2" color="rgba(255, 255, 255, 0.4)">
         <v-icon left class="mr-1">mdi-image</v-icon>
@@ -59,6 +60,19 @@
       </div>
     </editor-floating-menu>
     <editor-content class="editor__content" :editor="editor" />
+
+    <div class="editor__page-control d-flex justify-start align-center">
+      <v-btn text @click="saveTask" class="text-none text-body-2 px-2" color="rgba(255, 255, 255, 0.4)">
+        Save
+      </v-btn>
+      <v-btn text @click="preview = !preview" class="text-none text-body-2 px-2" color="rgba(255, 255, 255, 0.4)">
+        Preview
+      </v-btn>
+    </div>
+    
+    <div class="output" v-if="preview">
+      <div>{{ tasks }}</div>
+    </div>
   </div>
 </template>
 
@@ -86,6 +100,7 @@ import {
 } from 'tiptap-extensions'
 import Doc from './custom-extensions/Doc'
 import Title from './custom-extensions/Title'
+import TitleToHtml from './custom-extensions/TitleToHtml'
 
 export default {
   components: {
@@ -103,7 +118,7 @@ export default {
             showOnlyCurrent: false,
             emptyNodeText: node => {
               if (node.type.name === 'title') {
-                return 'Title here'
+                return 'Untitled'
               }
             }
           }),
@@ -128,7 +143,42 @@ export default {
             notAfter: ['paragraph'],
           }),
         ],
-      })
+        onUpdate: ({ getJSON }) => {
+          this.json = getJSON()
+        }
+      }),
+      json: 'this should be a json',
+      result: '',
+      tasks: [],
+      preview: false
+    }
+  },
+  mounted() {
+    console.log('App mounted!');
+    if (localStorage.getItem('tasks')) this.tasks = JSON.parse(localStorage.getItem('tasks'));
+  },
+  watch: {
+    tasks: {
+      handler(){
+        localStorage.setItem('tasks', JSON.stringify(this.tasks))
+      },
+      deep: true
+    }
+  },
+  methods: {
+    jsonToHtml: function() {
+      const Renderer = require("prosemirror-to-html-js").Renderer;
+      const renderer = new Renderer();
+
+      renderer.addNode(TitleToHtml)
+
+      this.result = renderer.render(this.json)
+
+      return this.result
+    },
+    saveTask: function() {
+      this.tasks.push(this.json);
+      this.preview = true
     }
   },
   beforeDestroy() {
@@ -147,6 +197,12 @@ export default {
     color: #aaa;
     pointer-events: none;
     height: 0;
+  }
+
+  .editor{
+    .awesome-blockquote{
+      color: white
+    }
   }
 
   .ProseMirror:focus {
