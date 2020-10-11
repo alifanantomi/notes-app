@@ -1,17 +1,17 @@
 <template>
-  <v-card class="rounded-lg mb-3 mx-lg-2 mx-md-auto mx-sm-auto mx-auto" max-width="343" outlined>
+  <v-card class="rounded-lg mb-3 mx-lg-auto mx-md-auto mx-sm-auto mx-auto" min-width="343" max-width="343" outlined>
     <!-- Task.Categories -->
     <div class="categories-wrapper d-flex justify-space-between align-center">
-      <v-card-text class="text-caption text-capitalize">
-        <v-chip label small>{{task.categories}}</v-chip>
+      <v-card-text class="text-caption text-capitalize pb-0" v-if="task.category">
+        <v-chip label small>{{task.category}}</v-chip>
       </v-card-text>
       <!-- <v-card-text class="text-right">1 hour ago</v-card-text> -->
     </div>
     <!-- Task.Title -->
-    <v-card-title class="pt-0" v-text="task.title"></v-card-title>
+    <v-card-title class="" v-text="task.title"></v-card-title>
     <!-- Task.Desc -->
     <v-card-subtitle>
-      <v-clamp autoresize :max-lines="3">{{ task.desc }}</v-clamp>
+      <v-clamp autoresize :max-lines="3">{{ task.content[1].content[0].text }}</v-clamp>
     </v-card-subtitle>
     <!-- Task.Todos -->
     <!-- <v-list-item 

@@ -29,9 +29,8 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-
 import CardTask from '@/components/CardTask.vue'
+import { mapState } from 'vuex'
 // import { filter } from 'vue/types/umd';
 
 export default {
@@ -42,11 +41,11 @@ export default {
   data() {
     return {
       categoriesItems: ['All', 'Design', 'Programming', 'Study'],
-      categories: 'All'
+      categories: 'All',
+      tasks: []
     }
   },
   computed: {
-    // grab list of task  from state
     ...mapState([
       'Task'
     ]),
@@ -71,7 +70,7 @@ export default {
   methods: {
     filters: function(categories) {
       var queryCheck = this.$route.query.search
-      return this.Task.filter(function(task) {
+      return this.tasks.filter(function(task) {
         if(categories == 'All' && !queryCheck) {
           return task
         }else if(categories == 'All' && queryCheck){

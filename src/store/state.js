@@ -1,7 +1,5 @@
-import Task from '../data/Task'
-import Categories from '../data/Categories'
+var Task = []
 
 export default {
   Task,
-  Categories
 }

@@ -62,7 +62,7 @@
     <editor-content class="editor__content" :editor="editor" />
 
     <div class="editor__page-control d-flex justify-start align-center">
-      <v-btn text @click="saveTask" class="text-none text-body-2 px-2" color="rgba(255, 255, 255, 0.4)">
+      <v-btn text @click="handleSubmit" class="text-none text-body-2 px-2" color="rgba(255, 255, 255, 0.4)">
         Save
       </v-btn>
       <v-btn text @click="preview = !preview" class="text-none text-body-2 px-2" color="rgba(255, 255, 255, 0.4)">
@@ -71,12 +71,17 @@
     </div>
     
     <div class="output" v-if="preview">
-      <div>{{ tasks }}</div>
+      <div v-for="(task, index) in Task" :key="index">
+        <pre>{{ task }}</pre>
+        <v-clamp autoresize :max-lines="3">
+        </v-clamp>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import VClamp from 'vue-clamp'
 import { Editor, EditorContent, EditorFloatingMenu  } from 'tiptap'
 import { 
   Blockquote,
@@ -101,11 +106,13 @@ import {
 import Doc from './custom-extensions/Doc'
 import Title from './custom-extensions/Title'
 import TitleToHtml from './custom-extensions/TitleToHtml'
+import { mapState, mapActions } from 'vuex'
 
 export default {
   components: {
     EditorFloatingMenu ,
-    EditorContent
+    EditorContent,
+    VClamp
   },
   data: function() {
     return {
@@ -147,41 +154,68 @@ export default {
           this.json = getJSON()
         }
       }),
+      formData: {
+        title: '',
+        category: '',
+        progress: 0,
+        favorite: false,
+      },
       json: 'this should be a json',
       result: '',
-      tasks: [],
       preview: false
     }
   },
-  mounted() {
-    console.log('App mounted!');
-    if (localStorage.getItem('tasks')) this.tasks = JSON.parse(localStorage.getItem('tasks'));
+  computed: {
+    ...mapState([
+      'Task'
+    ]),
   },
-  watch: {
-    tasks: {
-      handler(){
-        localStorage.setItem('tasks', JSON.stringify(this.tasks))
-      },
-      deep: true
-    }
+  created() {
+    this.unsubscribe = this.$store.subscribe((mutation, state) => {
+      if (mutation.type === 'appendTask') {
+        localStorage.setItem('tasks', JSON.stringify(state.Task))
+      }
+    })
   },
   methods: {
-    jsonToHtml: function() {
+    ...mapActions([
+      'addTask'
+    ]),
+    jsonToHtml: function(j) {
       const Renderer = require("prosemirror-to-html-js").Renderer;
       const renderer = new Renderer();
+      let result
 
       renderer.addNode(TitleToHtml)
 
-      this.result = renderer.render(this.json)
+      result = renderer.render(j)
 
-      return this.result
+      return result
     },
-    saveTask: function() {
-      this.tasks.push(this.json);
-      this.preview = true
+    handleSubmit: function() {
+      let contentTitle = this.json.content[0].content[0].text
+      let content = this.json.content
+
+      this.formData.title = contentTitle
+      this.formData.category = 'P',
+      this.formData.progress = 10,
+      this.formData.favorite = false
+
+      const { title, category, progress, favorite } = this.formData
+      const payload = {
+        title,
+        category,
+        progress,
+        favorite,
+        content
+      }
+
+      this.addTask(payload)
+      this.preview = true;
     }
   },
   beforeDestroy() {
+    this.unsubscribe();
     this.editor.destroy()
   }
 }

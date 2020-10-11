@@ -15,7 +15,7 @@
           dense
         ></v-text-field>
         <v-spacer></v-spacer>
-        <v-btn class="profile-bar" icon>
+        <v-btn class="profile-bar" @click="cleanTask" icon>
           <v-img src="@/assets/images/person.jpg" alt="username" class="username-img rounded-circle" max-height="30" max-width="30" ></v-img>
         </v-btn>
       </v-app-bar>
@@ -23,7 +23,7 @@
         <v-btn icon link href="/"><v-icon>mdi-chevron-left</v-icon></v-btn>
         <span class="text-body-1">New Task</span>
         <v-spacer></v-spacer>
-        <v-btn class="profile-bar" icon>
+        <v-btn class="profile-bar" @click="cleanTask" icon>
           <v-img src="@/assets/images/person.jpg" alt="username" class="username-img rounded-circle" max-height="30" max-width="30" ></v-img>
         </v-btn>
       </v-app-bar>
@@ -82,6 +82,9 @@ export default {
       currentLocation: window.location.pathname
     }
   },
+  mounted() {
+    this.$store.commit('getTask')
+  },
   created () {
     this.$vuetify.theme.dark = true
     this.getFavorite
@@ -95,6 +98,12 @@ export default {
       return this.Task.filter(function (task) {
         return task.favorite
       });
+    }
+  },
+  methods: {
+    cleanTask() {
+      localStorage.clear()
+      window.location.reload(true);
     }
   },
   watch: {
