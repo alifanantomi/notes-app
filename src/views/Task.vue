@@ -6,6 +6,9 @@
         <v-icon left class="mr-1">mdi-image</v-icon>
         Add cover
       </v-btn>
+      <v-btn small text class="text-none text-body-2 px-2" color="rgba(255, 255, 255, 0.4)">
+        task index: {{ index }}
+      </v-btn>
     </div>
 
     <editor-floating-menu :editor="editor" v-slot="{ commands, isActive, menu }">
@@ -50,41 +53,25 @@
           @click="commands.code_block">
           <v-icon>mdi-code-tags</v-icon>  
         </button>
-
-        <!-- <button
-          class="menubar__button"
-          :class="{ 'is-active': isActive.todo_list() }"
-          @click="commands.todo_list">
-          <v-icon>mdi-format-list-checks</v-icon>  
-        </button> -->
       </div>
     </editor-floating-menu>
     <editor-content class="editor__content" :editor="editor" />
 
-    <div class="editor__page-control d-flex justify-start align-center">
+    <!-- <div class="editor__page-control d-flex justify-start align-center">
       <v-btn text @click="handleSubmit" class="text-none text-body-2 px-2" color="rgba(255, 255, 255, 0.4)">
         Save
       </v-btn>
       <v-btn text @click="preview = !preview" class="text-none text-body-2 px-2" color="rgba(255, 255, 255, 0.4)">
         Preview
       </v-btn>
-    </div>
-    
-    <div class="output" v-if="preview">
-      <div v-for="(task, index) in Task" :key="index">
-        <pre>{{ task }}</pre>
-        <v-clamp autoresize :max-lines="3">
-        </v-clamp>
-      </div>
-    </div>
+    </div> -->
+
   </div>
 </template>
 
 <script>
-import VClamp from 'vue-clamp'
 import { Editor, EditorContent, EditorFloatingMenu  } from 'tiptap'
-import { 
-  Blockquote,
+import { Blockquote,
   CodeBlock,
   HardBreak,
   Heading,
@@ -111,8 +98,7 @@ import { mapState, mapActions } from 'vuex'
 export default {
   components: {
     EditorFloatingMenu ,
-    EditorContent,
-    VClamp
+    EditorContent
   },
   data: function() {
     return {
@@ -155,14 +141,19 @@ export default {
         }
       }),
       formData: {
+        id: 0,
         title: '',
         category: '',
         progress: 0,
         favorite: false,
       },
-      json: 'this should be a json',
+      // link: this.$route.params.task,
+      json: '',
       result: '',
-      preview: false
+      editable: false,
+      preview: false,
+      index: 0, //index of array (from params)
+      id: 0,  //id task (random number/from database)
     }
   },
   computed: {
@@ -171,15 +162,33 @@ export default {
     ]),
   },
   created() {
+    this.index = this.$route.params.task
+    
     this.unsubscribe = this.$store.subscribe((mutation, state) => {
-      if (mutation.type === 'appendTask') {
+      if (mutation.type === 'updateTask') {
         localStorage.setItem('tasks', JSON.stringify(state.Task))
       }
     })
   },
+  watch: {
+    $route() {      
+      this.index = this.$route.params.task
+      // this.id = this.Task[this.index].id
+    },
+    index: {
+      handler() {
+        this.jsonToHtml(this.Task[this.index])
+      }
+    },
+    json: {
+      handler() {
+        this.handleSubmit()
+      }
+    }
+  },
   methods: {
     ...mapActions([
-      'addTask'
+      'updateTask'
     ]),
     jsonToHtml: function(j) {
       const Renderer = require("prosemirror-to-html-js").Renderer;
@@ -190,28 +199,31 @@ export default {
 
       result = renderer.render(j)
 
-      return result
+      return this.editor.setContent(result)
     },
     handleSubmit: function() {
       let contentTitle = this.json.content[0].content[0].text
       let content = this.json.content
-
+      
+      this.formData.id = this.Task[this.index].id
       this.formData.title = contentTitle
-      this.formData.category = 'P',
+      this.formData.category = '',
       this.formData.progress = 10,
       this.formData.favorite = false
 
-      const { title, category, progress, favorite } = this.formData
+      const { id, title, category, progress, favorite } = this.formData
       const payload = {
+        id, 
         title,
         category,
         progress,
         favorite,
         content
       }
+      this.updateTask(payload)
 
-      this.addTask(payload)
-      this.preview = true;
+      // console.log(payload.title.replace(/\W+/g, '-'));
+      // this.$router.push({name: 'Task', params: {task: payload.title.replace(/\W+/g, '-')}})
     }
   },
   beforeDestroy() {
@@ -231,12 +243,6 @@ export default {
     color: #aaa;
     pointer-events: none;
     height: 0;
-  }
-
-  .editor{
-    .awesome-blockquote{
-      color: white
-    }
   }
 
   .ProseMirror:focus {

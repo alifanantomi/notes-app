@@ -15,7 +15,7 @@
           dense
         ></v-text-field>
         <v-spacer></v-spacer>
-        <v-btn class="profile-bar" @click="cleanTask" icon>
+        <v-btn class="profile-bar" @click="cleanTask" href="/" icon>
           <v-img src="@/assets/images/person.jpg" alt="username" class="username-img rounded-circle" max-height="30" max-width="30" ></v-img>
         </v-btn>
       </v-app-bar>
@@ -23,7 +23,7 @@
         <v-btn icon link href="/"><v-icon>mdi-chevron-left</v-icon></v-btn>
         <span class="text-body-1">New Task</span>
         <v-spacer></v-spacer>
-        <v-btn class="profile-bar" @click="cleanTask" icon>
+        <v-btn class="profile-bar" @click="cleanTask" href="/" icon>
           <v-img src="@/assets/images/person.jpg" alt="username" class="username-img rounded-circle" max-height="30" max-width="30" ></v-img>
         </v-btn>
       </v-app-bar>
@@ -43,13 +43,13 @@
           <!-- list of all task -->
           <the-navigation 
             v-for="(task, index) in Task" 
-            :key="task.title"
+            :key="task.id"
             :index="index"
             :task="task"
             link></the-navigation>
         </v-list>
         <template v-slot:append>
-          <v-list-item link href="/new">
+          <v-list-item @click="newTask">
             <v-list-item-title>Add a task</v-list-item-title>
             <v-icon small>mdi-plus</v-icon>
           </v-list-item>
@@ -64,7 +64,8 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions, mapGetters } from 'vuex';
+import Data from "./data/Task";
 
 import TheNavigation from '@/layouts/TheNavigation';
 // import SearchBar from '@/components/SearchBar.vue'
@@ -79,19 +80,28 @@ export default {
     return {
       drawer: null,
       query: '',
-      currentLocation: window.location.pathname
+      currentLocation: window.location.pathname,
     }
   },
   mounted() {
     this.$store.commit('getTask')
   },
   created () {
+    this.unsubscribe = this.$store.subscribe((mutation, state) => {
+      if (mutation.type === 'appendTask') {
+        localStorage.setItem('tasks', JSON.stringify(state.Task))
+      }
+    })
+
     this.$vuetify.theme.dark = true
     this.getFavorite
   },
   computed: {
     ...mapState([
       'Task'
+    ]),
+    ...mapGetters([
+      'getIndex'
     ]),
     // get favorite list for navigation
     getFavorite: function() {
@@ -101,9 +111,33 @@ export default {
     }
   },
   methods: {
+    ...mapActions([
+      'addTask'
+    ]),
     cleanTask() {
       localStorage.clear()
-      window.location.reload(true);
+    },
+    newTask() {
+      let content = Data.content
+      
+      Data.id = Math.floor((Math.random() * 10000) + 1)
+      Data.title = 'Untitled'
+      Data.category = '',
+      Data.progress = 10,
+      Data.favorite = false
+
+      const { id, title, category, progress, favorite } = Data
+      const payload = {
+        id, 
+        title,
+        category,
+        progress,
+        favorite,
+        content
+      }
+
+      this.addTask(payload)
+      this.$router.push({name: 'Task', params: {task: this.getIndex}})
     }
   },
   watch: {

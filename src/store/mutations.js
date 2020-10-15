@@ -3,8 +3,15 @@ export default {
     if (localStorage.getItem('tasks')) state.Task = JSON.parse(localStorage.getItem('tasks'));
   },
 
-  appendTask: (state, tasks) => {
-    console.log('appending');
-    state.Task.push(tasks)
+  appendTask: (state, payload) => {
+    state.Task.push(payload)
+  },
+
+  updateTask: (state, payload) => {
+    state.Task.forEach(task => {
+      if (task.id == payload.id) {
+        Object.assign(task, payload)
+      }
+    });
   }
 }

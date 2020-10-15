@@ -11,7 +11,7 @@
     <v-card-title class="" v-text="task.title"></v-card-title>
     <!-- Task.Desc -->
     <v-card-subtitle>
-      <v-clamp autoresize :max-lines="3">{{ task.content[1].content[0].text }}</v-clamp>
+      <v-clamp autoresize :max-lines="1">{{ task.content[1].content[0].text }}</v-clamp>
     </v-card-subtitle>
     <!-- Task.Todos -->
     <!-- <v-list-item 
@@ -29,7 +29,7 @@
     <v-card-text>
       <v-row no-gutters class="justify-space-between mb-1">
         <span class="text-caption">Progress</span>
-        <span class="text-caption" v-text="task.progress"></span>
+        <span class="text-caption">{{task.progress}}%</span>
       </v-row>
       <div class="progress-bar-wrapper">
         <v-progress-linear :value="task.progress + 10" color="grey" height="4" rounded></v-progress-linear>
@@ -49,7 +49,7 @@
       </v-row> -->
       <span class="text-body-2">1 hour ago</span>
       <div class="actions-wrapper d-flex align-center">
-        <v-btn icon :to="`/task/${this.index}`"><v-icon small>mdi-eye</v-icon></v-btn>
+        <v-btn icon :to="`${task.id}`"><v-icon small>mdi-eye</v-icon></v-btn>
         <v-btn icon><v-icon small>mdi-pencil</v-icon></v-btn>
       </div>
     </div>

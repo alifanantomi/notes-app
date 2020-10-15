@@ -13,7 +13,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import TitleToHtml from './custom-extensions/TitleToHtml'
+// import TitleToHtml from './custom-extensions/TitleToHtml'
 
 export default {
   data() {
@@ -36,7 +36,7 @@ export default {
       const renderer = new Renderer();
       let result
 
-      renderer.addNode(TitleToHtml)
+      // renderer.addNode(TitleToHtml)
 
       result = renderer.render(j)
 
@@ -46,6 +46,5 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="scss" scoped>
 </style>

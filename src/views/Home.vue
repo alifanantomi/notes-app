@@ -66,28 +66,6 @@ export default {
       }
       return task
     }
-  },
-  methods: {
-    filters: function(categories) {
-      var queryCheck = this.$route.query.search
-      return this.tasks.filter(function(task) {
-        if(categories == 'All' && !queryCheck) {
-          return task
-        }else if(categories == 'All' && queryCheck){
-          return console.log('All with '+queryCheck);
-        }else if(categories && !queryCheck){
-          console.log(categories+' no query');
-          return task.categories == categories
-        }else{
-          console.log(categories+' '+queryCheck);
-        }
-      })
-    },
-    search: function(listItem, query){
-      return listItem.filter(function (item) {
-        return item.title.toLowerCase().indexOf(query.toLowerCase()) !== -1
-      })
-    }
   }
 }
 </script>
