@@ -49,7 +49,7 @@
       </v-row> -->
       <span class="text-body-2">1 hour ago</span>
       <div class="actions-wrapper d-flex align-center">
-        <v-btn icon :to="`${task.id}`"><v-icon small>mdi-eye</v-icon></v-btn>
+        <v-btn icon :to="`${index}`"><v-icon small>mdi-eye</v-icon></v-btn>
         <v-btn icon><v-icon small>mdi-pencil</v-icon></v-btn>
       </div>
     </div>

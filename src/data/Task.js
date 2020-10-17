@@ -3,7 +3,6 @@ export default {
   "id": 0,
   "title": "",
   "category": "",
-  "progress": 0,
   "content": [
     {
       "type": "title",

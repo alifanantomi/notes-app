@@ -31,14 +31,14 @@
       <!-- SideBar -->
       <v-navigation-drawer clipped fixed v-model="drawer" width="230" mobile-breakpoint="769" class="navigation-wrapper">
         <v-list>
-          <v-subheader class="text-capitalize text-body-2 font-weight-bold">Favorites</v-subheader>
+          <!-- <v-subheader class="text-capitalize text-body-2 font-weight-bold">Favorites</v-subheader> -->
           <!-- list of favorite -->
-          <the-navigation
+          <!-- <the-navigation
             v-for="(task, index) in getFavorite" 
             :key="index"
             :task="task"
             :index="index"
-            link></the-navigation>
+            link></the-navigation> -->
           <v-subheader class="text-capitalize text-body-2 font-weight-bold">All Task</v-subheader>
           <!-- list of all task -->
           <the-navigation 
@@ -104,11 +104,11 @@ export default {
       'getIndex'
     ]),
     // get favorite list for navigation
-    getFavorite: function() {
-      return this.Task.filter(function (task) {
-        return task.favorite
-      });
-    }
+    // getFavorite: function() {
+    //   return this.Task.filter(function (task) {
+    //     return task.favorite
+    //   });
+    // }
   },
   methods: {
     ...mapActions([

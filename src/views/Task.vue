@@ -53,9 +53,19 @@
           @click="commands.code_block">
           <v-icon>mdi-code-tags</v-icon>  
         </button>
+
+        <button
+          class="menubar__button"
+          :class="{ 'is-active': isActive.todo_list() }"
+          @click="commands.todo_list">
+          <v-icon>mdi-format-list-checks</v-icon>  
+        </button>
+
       </div>
     </editor-floating-menu>
     <editor-content class="editor__content" :editor="editor" />
+
+    <!-- <pre>{{this.result}}</pre> -->
 
     <!-- <div class="editor__page-control d-flex justify-start align-center">
       <v-btn text @click="handleSubmit" class="text-none text-body-2 px-2" color="rgba(255, 255, 255, 0.4)">
@@ -92,7 +102,6 @@ import { Blockquote,
 } from 'tiptap-extensions'
 import Doc from './custom-extensions/Doc'
 import Title from './custom-extensions/Title'
-import TitleToHtml from './custom-extensions/TitleToHtml'
 import { mapState, mapActions } from 'vuex'
 
 export default {
@@ -122,7 +131,9 @@ export default {
           new BulletList(),
           new OrderedList(),
           new ListItem(),
-          new TodoItem(),
+          new TodoItem({
+            nested: true
+          }),
           new TodoList(),
           new Bold(),
           new Code(),
@@ -138,18 +149,18 @@ export default {
         ],
         onUpdate: ({ getJSON }) => {
           this.json = getJSON()
+          this.handleSubmit()
         }
       }),
       formData: {
         id: 0,
         title: '',
         category: '',
-        progress: 0,
-        favorite: false,
+        type: 'doc'
       },
       // link: this.$route.params.task,
       json: '',
-      result: '',
+      result: {},
       editable: false,
       preview: false,
       index: 0, //index of array (from params)
@@ -177,12 +188,8 @@ export default {
     },
     index: {
       handler() {
-        this.jsonToHtml(this.Task[this.index])
-      }
-    },
-    json: {
-      handler() {
-        this.handleSubmit()
+        this.result  = this.Task[this.index]
+        this.editor.setContent(this.result)
       }
     }
   },
@@ -190,37 +197,27 @@ export default {
     ...mapActions([
       'updateTask'
     ]),
-    jsonToHtml: function(j) {
-      const Renderer = require("prosemirror-to-html-js").Renderer;
-      const renderer = new Renderer();
-      let result
-
-      renderer.addNode(TitleToHtml)
-
-      result = renderer.render(j)
-
-      return this.editor.setContent(result)
-    },
     handleSubmit: function() {
-      let contentTitle = this.json.content[0].content[0].text
-      let content = this.json.content
-      
-      this.formData.id = this.Task[this.index].id
-      this.formData.title = contentTitle
-      this.formData.category = '',
-      this.formData.progress = 10,
-      this.formData.favorite = false
+      const content = this.json.content[0]
 
-      const { id, title, category, progress, favorite } = this.formData
-      const payload = {
-        id, 
-        title,
-        category,
-        progress,
-        favorite,
-        content
+      if (Object.prototype.hasOwnProperty.call(content, 'content')) {
+        let contentTitle = this.json.content[0].content[0].text
+        let content = this.json.content
+        
+        this.formData.id = this.Task[this.index].id
+        this.formData.title = contentTitle
+        this.formData.category = ''
+
+        const { id, title, category, type} = this.formData
+        const payload = {
+          id, 
+          title,
+          category,
+          content,
+          type
+        }
+        this.updateTask(payload)
       }
-      this.updateTask(payload)
 
       // console.log(payload.title.replace(/\W+/g, '-'));
       // this.$router.push({name: 'Task', params: {task: payload.title.replace(/\W+/g, '-')}})
