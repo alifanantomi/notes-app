@@ -1,5 +1,26 @@
 <template>
   <div class="editor px-3">
+    <v-app-bar flat fixed height="52">
+      <v-btn icon link to="/"><v-icon>mdi-chevron-left</v-icon></v-btn>
+      <v-spacer></v-spacer>
+      <span class="text-body-1">{{ Task[this.index].title }}</span>
+      <v-spacer></v-spacer>
+      <v-menu bottom left>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn dark icon v-bind="attrs" v-on="on">
+              <v-icon>mdi-dots-vertical</v-icon>
+            </v-btn>
+          </template>
+
+          <v-list class="py-1 px-0">
+            <v-list-item class="px-4">
+              <v-list-item @click="taskRemove" link class="py-0 px-0">
+                Delete task
+              </v-list-item>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+    </v-app-bar>
 
     <div class="editor__page-control d-flex justify-start align-center">
       <v-btn small text class="text-none text-body-2 px-2" color="rgba(255, 255, 255, 0.4)">
@@ -15,11 +36,6 @@
         <div v-else>
           {{ categories }}
         </div>
-      </v-btn>
-
-      <v-btn @click="taskRemove" text class="text-none text-body-2 px-2" color="rgba(255, 255, 255, 0.4)">
-        <v-icon left class="mr-1">mdi-image</v-icon>
-        Delete task
       </v-btn>
     </div>
 
@@ -82,6 +98,7 @@
 
       </div>
     </editor-floating-menu>
+    
     <editor-content class="editor__content" :editor="editor" />
 
     <v-bottom-sheet v-model="sheet">

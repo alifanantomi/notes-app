@@ -1,5 +1,22 @@
 <template>
   <section class="home-wrapper">
+    <v-app-bar flat fixed height="58">
+      <v-app-bar-nav-icon class="d-md-none d-lg-none" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+      <v-toolbar-title class="text-h6 d-none d-md-inline d-lg-inline pl-0">Task app</v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-text-field
+        placeholder="Search task"
+        color="dark"
+        v-model="query"
+        hide-details
+        outlined
+        dense
+      ></v-text-field>
+      <v-spacer></v-spacer>
+      <v-btn class="profile-bar" icon>
+        <v-img src="@/assets/images/person.jpg" alt="username" class="username-img rounded-circle" max-height="30" max-width="30" ></v-img>
+      </v-btn>
+    </v-app-bar>
     <div class="content-header-wrapper d-md-flex d-sm-flex justify-space-between align-center mx-md-2 py-3">
       <span class="text-subtitle-1 d-none d-sm-inline d-md-inline d-lg-inline">{{ selectedCategories }} Task</span>
       <!-- filter input select -->
@@ -17,11 +34,11 @@
       </div>
     </div>
     <!-- card component -->
-    <div class="card-list-wrapper d-flex flex-wrap">
+    <div class="card-list-wrapper">
       <card-task 
-        class="list-complete-item"
         v-for="(task, index) in filteredTask"
         :key="index"
+        class="list-complete-item"
         :index="index"
         :task="task"></card-task>
     </div>
@@ -44,7 +61,8 @@ export default {
       categoriesItems,
       categories: [],
       selectedCategories: 'All',
-      tasks: []
+      tasks: [],
+      query: ''
     }
   },
   created() {
@@ -73,7 +91,16 @@ export default {
       }
       return task
     }
-  }
+  },
+  watch: {
+    query: function() {
+      if (this.query == '') {
+        this.$router.push({name: 'Home'})
+      }else{
+        this.$router.push({name: 'Home', query: { search: this.query}})
+      }
+    }
+  },
 }
 </script>
 

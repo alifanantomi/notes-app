@@ -2,31 +2,6 @@
   <v-app>
     <v-sheet height="100%" class="overflow-hidden" style="position: relative;">
       <!-- TopBar -->
-      <v-app-bar v-if="currentLocation != '/new'" flat fixed height="58">
-        <v-app-bar-nav-icon class="d-md-none d-lg-none" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-        <v-toolbar-title class="text-h6 d-none d-md-inline d-lg-inline pl-0">Task app</v-toolbar-title>
-        <v-spacer></v-spacer>
-        <v-text-field
-          placeholder="Search task"
-          color="dark"
-          v-model="query"
-          hide-details
-          outlined
-          dense
-        ></v-text-field>
-        <v-spacer></v-spacer>
-        <v-btn class="profile-bar" @click="cleanTask" href="/" icon>
-          <v-img src="@/assets/images/person.jpg" alt="username" class="username-img rounded-circle" max-height="30" max-width="30" ></v-img>
-        </v-btn>
-      </v-app-bar>
-      <v-app-bar v-else flat fixed height="52">
-        <v-btn icon link href="/"><v-icon>mdi-chevron-left</v-icon></v-btn>
-        <span class="text-body-1">New Task</span>
-        <v-spacer></v-spacer>
-        <v-btn class="profile-bar" @click="cleanTask" href="/" icon>
-          <v-img src="@/assets/images/person.jpg" alt="username" class="username-img rounded-circle" max-height="30" max-width="30" ></v-img>
-        </v-btn>
-      </v-app-bar>
 
       <!-- SideBar -->
       <v-navigation-drawer clipped fixed v-model="drawer" width="230" mobile-breakpoint="769" class="navigation-wrapper">
