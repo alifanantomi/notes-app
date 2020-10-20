@@ -387,7 +387,7 @@ li[data-done="true"] > .todo-content > p {
 }
 
 li[data-done="true"] > .todo-checkbox {
-  background-color: #000000;
+  background-color: #dddddd;
 }
 
 li[data-done="false"] {

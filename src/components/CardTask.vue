@@ -47,7 +47,7 @@
           <v-img src="@/assets/images/person.jpg" :alt="participant.image" class="username-img rounded-circle" max-height="40" max-width="40" ></v-img>
         </v-btn>
       </v-row> -->
-      <span class="text-body-2">1 hour ago</span>
+      <span class="text-body-2">{{ task.updated_at | timestampFormat}}</span>
       <div class="actions-wrapper d-flex align-center">
         <v-btn icon :to="`${index}`"><v-icon small>mdi-eye</v-icon></v-btn>
         <v-btn icon><v-icon small>mdi-pencil</v-icon></v-btn>
@@ -79,6 +79,12 @@ export default {
     slicedTodos: function() {
       return this.task.todos.slice(0, 3)
     },
+  },
+  filters: {
+    timestampFormat(value) {
+      var date = new Date(value)
+      return date.toDateString()    
+    }
   }
 }
 </script>

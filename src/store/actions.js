@@ -5,5 +5,9 @@ export default {
 
   updateTask: ({ commit }, payload) => {
     commit('updateTask', payload)
+  },
+
+  removeTask: ({ commit}, payload) => {
+    commit('removeTask', payload)
   }
 }

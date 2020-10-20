@@ -13,5 +13,9 @@ export default {
         Object.assign(task, payload)
       }
     });
+  },
+
+  removeTask: (state, payload) => {
+    state.Task.splice(payload, 1);
   }
 }

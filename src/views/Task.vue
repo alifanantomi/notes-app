@@ -6,8 +6,20 @@
         <v-icon left class="mr-1">mdi-image</v-icon>
         Add cover
       </v-btn>
-      <v-btn small text class="text-none text-body-2 px-2" color="rgba(255, 255, 255, 0.4)">
-        task index: {{ index }}
+
+      <v-btn @click="sheet = !sheet" text class="text-none text-body-2 px-2" color="rgba(255, 255, 255, 0.4)">
+        <v-icon left class="mr-1">mdi-image</v-icon>
+        <div v-if="categories == ''">
+          Add categories
+        </div>
+        <div v-else>
+          {{ categories }}
+        </div>
+      </v-btn>
+
+      <v-btn @click="taskRemove" text class="text-none text-body-2 px-2" color="rgba(255, 255, 255, 0.4)">
+        <v-icon left class="mr-1">mdi-image</v-icon>
+        Delete task
       </v-btn>
     </div>
 
@@ -30,6 +42,13 @@
           :class="{ 'is-active': isActive.heading({ level: 2 }) }"
           @click="commands.heading({ level: 2 })">
           <v-icon>mdi-format-header-2</v-icon>
+        </button>
+
+        <button 
+          class="menubar__button" 
+          :class="{ 'is-active': isActive.heading({ level: 3 }) }"
+          @click="commands.heading({ level: 3 })">
+          <v-icon>mdi-format-header-3</v-icon>
         </button>
 
         <button 
@@ -64,6 +83,33 @@
       </div>
     </editor-floating-menu>
     <editor-content class="editor__content" :editor="editor" />
+
+    <v-bottom-sheet v-model="sheet">
+      <v-sheet
+        class="text-center"
+      >
+        <v-btn
+          class="mt-6"
+          text
+          color="red"
+          @click="sheet = !sheet"
+        >
+          close
+        </v-btn>
+        <div class="py-3">
+          <v-list>
+            <v-list-item
+              v-for="categories in categoriesItems"
+              :key="categories.title"
+              @click="getCategories(categories.title)"
+              v-model="categories.title"
+            >
+              <v-list-item-title>{{ categories.title }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </div>
+      </v-sheet>
+    </v-bottom-sheet>
 
     <!-- <pre>{{this.result}}</pre> -->
 
@@ -102,7 +148,8 @@ import { Blockquote,
 } from 'tiptap-extensions'
 import Doc from './custom-extensions/Doc'
 import Title from './custom-extensions/Title'
-import { mapState, mapActions } from 'vuex'
+import categoriesItems from '@/data/Categories'
+import { mapActions, mapState } from 'vuex'
 
 export default {
   components: {
@@ -156,13 +203,15 @@ export default {
         id: 0,
         title: '',
         category: '',
-        type: 'doc'
+        type: 'doc',
+        updated_at: ''
       },
-      // link: this.$route.params.task,
+      // Task: [],
+      categoriesItems,
+      categories: '',
+      sheet: false,
       json: '',
       result: {},
-      editable: false,
-      preview: false,
       index: 0, //index of array (from params)
       id: 0,  //id task (random number/from database)
     }
@@ -170,13 +219,15 @@ export default {
   computed: {
     ...mapState([
       'Task'
-    ]),
+    ])
   },
   created() {
+    // this.Task = this.$store.state.Task
     this.index = this.$route.params.task
+    // console.log(this.categories);
     
     this.unsubscribe = this.$store.subscribe((mutation, state) => {
-      if (mutation.type === 'updateTask') {
+      if (mutation.type === 'updateTask' || mutation.type === 'removeTask') {
         localStorage.setItem('tasks', JSON.stringify(state.Task))
       }
     })
@@ -184,19 +235,27 @@ export default {
   watch: {
     $route() {      
       this.index = this.$route.params.task
+      this.categories = this.Task[this.index].category
       // this.id = this.Task[this.index].id
     },
     index: {
       handler() {
-        this.result  = this.Task[this.index]
+        this.result = this.Task[this.index]
         this.editor.setContent(this.result)
       }
     }
   },
   methods: {
     ...mapActions([
-      'updateTask'
+      'updateTask',
+      'removeTask'
     ]),
+    getCategories: function(value) {
+      this.categories = value
+      this.json = this.editor.getJSON()
+      this.sheet = false
+      this.handleSubmit()
+    },
     handleSubmit: function() {
       const content = this.json.content[0]
 
@@ -206,22 +265,32 @@ export default {
         
         this.formData.id = this.Task[this.index].id
         this.formData.title = contentTitle
-        this.formData.category = ''
+        this.formData.category = this.categories
+        this.formData.updated_at = Date.now()
 
-        const { id, title, category, type} = this.formData
+        const { id, title, category, type, updated_at} = this.formData
         const payload = {
           id, 
           title,
           category,
           content,
-          type
+          type,
+          updated_at
         }
         this.updateTask(payload)
       }
 
       // console.log(payload.title.replace(/\W+/g, '-'));
       // this.$router.push({name: 'Task', params: {task: payload.title.replace(/\W+/g, '-')}})
+    },
+
+    taskRemove() {
+      var index = this.index
+      
+      this.removeTask(index)
+      this.$router.push('/')
     }
+
   },
   beforeDestroy() {
     this.unsubscribe();

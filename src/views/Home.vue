@@ -1,12 +1,12 @@
 <template>
   <section class="home-wrapper">
     <div class="content-header-wrapper d-md-flex d-sm-flex justify-space-between align-center mx-md-2 py-3">
-      <span class="text-subtitle-1 d-none d-sm-inline d-md-inline d-lg-inline">{{ categories }} Task</span>
+      <span class="text-subtitle-1 d-none d-sm-inline d-md-inline d-lg-inline">{{ selectedCategories }} Task</span>
       <!-- filter input select -->
       <div class="">
         <v-select
-          :items="categoriesItems"
-          v-model="categories"
+          :items="categories"
+          v-model="selectedCategories"
           full-width
           hide-details
           single-line
@@ -31,6 +31,7 @@
 <script>
 import CardTask from '@/components/CardTask.vue'
 import { mapState } from 'vuex'
+import categoriesItems from '@/data/Categories'
 // import { filter } from 'vue/types/umd';
 
 export default {
@@ -40,10 +41,16 @@ export default {
   },
   data() {
     return {
-      categoriesItems: ['All', 'Design', 'Programming', 'Study'],
-      categories: 'All',
+      categoriesItems,
+      categories: [],
+      selectedCategories: 'All',
       tasks: []
     }
+  },
+  created() {
+    this.categoriesItems.forEach(categories => {
+      this.categories.push(categories.title)
+    });
   },
   computed: {
     ...mapState([
@@ -53,15 +60,15 @@ export default {
     filteredTask() {
       var queryCheck = this.$route.query.search
       let task = this.Task
-      let categories = this.categories
+      let categories = this.selectedCategories
       if (queryCheck) {
         task = task.filter((t) => {
           return t.title.toLowerCase().indexOf(queryCheck.toLowerCase()) !== -1
         })
       }
-      if (this.categories && this.categories !== 'All') {
+      if (this.selectedCategories && this.selectedCategories !== 'All') {
         task = task.filter((t) => {
-          return t.categories === categories
+          return t.category === categories
         })
       }
       return task
