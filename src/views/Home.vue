@@ -2,7 +2,7 @@
   <section class="home-wrapper">
     <v-app-bar flat fixed height="58">
       <v-app-bar-nav-icon class="d-md-none d-lg-none" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-toolbar-title class="text-h6 d-none d-md-inline d-lg-inline pl-0">Task app</v-toolbar-title>
+      <v-toolbar-title class="text-h6 d-none d-md-inline d-lg-inline pl-0">Notes app</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-text-field
         placeholder="Search task"
