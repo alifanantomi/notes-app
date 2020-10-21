@@ -1,8 +1,8 @@
 <template>
-  <v-list nav subheader>
-    <v-list-item link :to="`/task/${index}`">
+  <v-list nav subheader dense>
+    <v-list-item link :to="`${index}` | linkFormat">
       <v-list-item-content>
-        <v-list-item-title v-text="task.title"></v-list-item-title>
+        <v-list-item-title class="text-body-2" v-text="task.title"></v-list-item-title>
       </v-list-item-content>
     </v-list-item>
   </v-list>
@@ -18,10 +18,15 @@ export default {
       type: Number
     }
   },
+  data() {
+    return {
+      title: ''
+    }
+  },
   filters: {
-    slashRemover(value) {
-      var string = value
-      return string.split('/').join('-')
+    linkFormat(str) {
+      str = str.replace(/\W+/g, '-')
+      return str
     }
   }
 }

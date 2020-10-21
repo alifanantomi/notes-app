@@ -1,0 +1,10 @@
+.card-list-wrapper{
+  columns: 3 200px;
+  column-gap: .5rem;
+
+  .list-complete-item {
+    margin: 0 1rem 1rem 0;
+    display: inline-block;
+    width: 100%;
+  }   
+}

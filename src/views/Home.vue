@@ -1,13 +1,29 @@
 <template>
   <section class="home-wrapper">
-    <div class="content-header-wrapper d-flex justify-space-between align-center mx-md-2 py-3">
-      <span class="text-subtitle-1 d-none d-md-inline d-lg-inline">{{ categories }} Task</span>
+    <v-app-bar flat fixed height="58">
+      <v-app-bar-nav-icon class="d-md-none d-lg-none" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+      <v-toolbar-title class="text-h6 d-none d-md-inline d-lg-inline pl-0">Task app</v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-text-field
+        placeholder="Search task"
+        color="dark"
+        v-model="query"
+        hide-details
+        outlined
+        dense
+      ></v-text-field>
+      <v-spacer></v-spacer>
+      <v-btn class="profile-bar" icon>
+        <v-img src="@/assets/images/person.jpg" alt="username" class="username-img rounded-circle" max-height="30" max-width="30" ></v-img>
+      </v-btn>
+    </v-app-bar>
+    <div class="content-header-wrapper d-md-flex d-sm-flex justify-space-between align-center mx-md-2 py-3">
+      <span class="text-subtitle-1 d-none d-sm-inline d-md-inline d-lg-inline">{{ selectedCategories }} Task</span>
       <!-- filter input select -->
-      <div class="d-flex justify-content-between align-center">
-        <!-- <span class="text-subtitle-1 mr-3">Filters</span> -->
+      <div class="">
         <v-select
-          :items="categoriesItems"
-          v-model="categories"
+          :items="categories"
+          v-model="selectedCategories"
           full-width
           hide-details
           single-line
@@ -18,11 +34,11 @@
       </div>
     </div>
     <!-- card component -->
-    <div class="card-list-wrapper d-flex flex-wrap">
+    <div class="card-list-wrapper">
       <card-task 
-        class="list-complete-item"
         v-for="(task, index) in filteredTask"
         :key="index"
+        class="list-complete-item"
         :index="index"
         :task="task"></card-task>
     </div>
@@ -30,9 +46,9 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-
 import CardTask from '@/components/CardTask.vue'
+import { mapState } from 'vuex'
+import categoriesItems from '@/data/Categories'
 // import { filter } from 'vue/types/umd';
 
 export default {
@@ -42,12 +58,19 @@ export default {
   },
   data() {
     return {
-      categoriesItems: ['All', 'Design', 'Programming', 'Study'],
-      categories: 'All'
+      categoriesItems,
+      categories: [],
+      selectedCategories: 'All',
+      tasks: [],
+      query: ''
     }
   },
+  created() {
+    this.categoriesItems.forEach(categories => {
+      this.categories.push(categories.title)
+    });
+  },
   computed: {
-    // grab list of task  from state
     ...mapState([
       'Task'
     ]),
@@ -55,42 +78,29 @@ export default {
     filteredTask() {
       var queryCheck = this.$route.query.search
       let task = this.Task
-      let categories = this.categories
+      let categories = this.selectedCategories
       if (queryCheck) {
         task = task.filter((t) => {
           return t.title.toLowerCase().indexOf(queryCheck.toLowerCase()) !== -1
         })
       }
-      if (this.categories && this.categories !== 'All') {
+      if (this.selectedCategories && this.selectedCategories !== 'All') {
         task = task.filter((t) => {
-          return t.categories === categories
+          return t.category === categories
         })
       }
       return task
     }
   },
-  methods: {
-    filters: function(categories) {
-      var queryCheck = this.$route.query.search
-      return this.Task.filter(function(task) {
-        if(categories == 'All' && !queryCheck) {
-          return task
-        }else if(categories == 'All' && queryCheck){
-          return console.log('All with '+queryCheck);
-        }else if(categories && !queryCheck){
-          console.log(categories+' no query');
-          return task.categories == categories
-        }else{
-          console.log(categories+' '+queryCheck);
-        }
-      })
-    },
-    search: function(listItem, query){
-      return listItem.filter(function (item) {
-        return item.title.toLowerCase().indexOf(query.toLowerCase()) !== -1
-      })
+  watch: {
+    query: function() {
+      if (this.query == '') {
+        this.$router.push({name: 'Home'})
+      }else{
+        this.$router.push({name: 'Home', query: { search: this.query}})
+      }
     }
-  }
+  },
 }
 </script>
 

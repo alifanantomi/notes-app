@@ -1,0 +1,13 @@
+.card-list-wrapper {
+  -webkit-columns: 3 200px;
+          columns: 3 200px;
+  -webkit-column-gap: .5rem;
+          column-gap: .5rem;
+}
+
+.card-list-wrapper .list-complete-item {
+  margin: 0 1rem 1rem 0;
+  display: inline-block;
+  width: 100%;
+}
+/*# sourceMappingURL=Home.css.map */
