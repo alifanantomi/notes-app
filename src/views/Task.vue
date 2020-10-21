@@ -23,11 +23,6 @@
     </v-app-bar>
 
     <div class="editor__page-control d-flex justify-start align-center">
-      <v-btn small text class="text-none text-body-2 px-2" color="rgba(255, 255, 255, 0.4)">
-        <v-icon left class="mr-1">mdi-image</v-icon>
-        Add cover
-      </v-btn>
-
       <v-btn @click="sheet = !sheet" text class="text-none text-body-2 px-2" color="rgba(255, 255, 255, 0.4)">
         <v-icon left class="mr-1">mdi-image</v-icon>
         <div v-if="categories == ''">
@@ -96,6 +91,12 @@
           <v-icon>mdi-format-list-checks</v-icon>  
         </button>
 
+        <button
+          class="menubar__button"
+          @click="showImagePrompt(commands.image)">
+          <v-icon>mdi-image</v-icon>  
+        </button>
+
       </div>
     </editor-floating-menu>
     
@@ -160,6 +161,7 @@ import { Blockquote,
   Strike,
   Underline,
   History,
+  Image,
   TrailingNode,
   Placeholder
 } from 'tiptap-extensions'
@@ -206,6 +208,7 @@ export default {
           new Strike(),
           new Underline(),
           new History(),
+          new Image(),
           new TrailingNode({
             node: 'paragraph',
             notAfter: ['paragraph'],
@@ -306,6 +309,13 @@ export default {
       
       this.removeTask(index)
       this.$router.push('/')
+    },
+
+    showImagePrompt(command) {
+      const src = prompt('Enter the Url of your image here')
+      if (src !== null) {
+        command({src})
+      }
     }
 
   },
