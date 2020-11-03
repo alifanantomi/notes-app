@@ -26,7 +26,7 @@
       </v-list-item-content>
     </v-list-item> -->
     <!-- Task.Progress -->
-    <v-card-text>
+    <!-- <v-card-text>
       <v-row no-gutters class="justify-space-between mb-1">
         <span class="text-caption">Progress</span>
         <span class="text-caption">{{task.progress}}%</span>
@@ -34,7 +34,7 @@
       <div class="progress-bar-wrapper">
         <v-progress-linear :value="task.progress + 10" color="grey" height="4" rounded></v-progress-linear>
       </div>
-    </v-card-text>
+    </v-card-text> -->
     <v-divider class="my-1"></v-divider>
     <!-- Task.Perticipant -->
     <div class="d-flex justify-space-between align-center mx-4 my-1">
@@ -50,7 +50,7 @@
       <span class="text-body-2">{{ task.updated_at | timestampFormat}}</span>
       <div class="actions-wrapper d-flex align-center">
         <v-btn icon :to="`${index}`"><v-icon small>mdi-eye</v-icon></v-btn>
-        <v-btn icon><v-icon small>mdi-pencil</v-icon></v-btn>
+        <!-- <v-btn icon><v-icon small>mdi-pencil</v-icon></v-btn> -->
       </div>
     </div>
   </v-card>
